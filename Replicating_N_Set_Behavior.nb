@@ -1,0 +1,849 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     36061,        841]
+NotebookOptionsPosition[     33626,        796]
+NotebookOutlinePosition[     34055,        813]
+CellTagsIndexPosition[     34012,        810]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Replicating N Set-Behavior for Defined Symbols (Set \[Rule] UpSet)", \
+"Title",
+ CellChangeTimes->{{3.8468490956431317`*^9, 3.846849163250592*^9}, {
+  3.8468579846391883`*^9, 
+  3.846858004960868*^9}},ExpressionUUID->"80cc4031-ae4b-4759-aaa6-\
+ee7f768201a4"],
+
+Cell["\<\
+According to Wolfram Philosophy, whenever you are to define a special \
+behavior for concrete interactions of user-defined symbols together with \
+built-in ones, you should always pause and ponder about whether to set Up or \
+Down values. This could seem a trivial matter at first glance, but it\
+\[CloseCurlyQuote]s actually kind of a most-important when developing any \
+sort of framework intended for widespread use. Thing is, you most certainly \
+don\[CloseCurlyQuote]t want your new (hopefully helpful add-on symbols) to \
+run into potential conflicts with already present infrastructure. It is thus \
+pretty advisable to think deep about all involved definitions among \
+interacting symbols, carefully analyzing their \
+\[OpenCurlyDoubleQuote]generality order\[CloseCurlyDoubleQuote]. The \
+importance of taking into account these considerations and following the \
+corresponding standard rules should never be underestimated, since the \
+consequences thereof are huge, at least twofold: \
+\>", "Text",
+ CellChangeTimes->{{3.8468491704256277`*^9, 3.846849200246442*^9}, {
+  3.8468492310495005`*^9, 3.846849260097457*^9}, {3.846849308937478*^9, 
+  3.8468498319922094`*^9}, {3.846849941750599*^9, 3.8468505407271996`*^9}, {
+  3.84685067901612*^9, 3.8468508912870417`*^9}, {3.846850936331715*^9, 
+  3.846850956446188*^9}, {3.84685141606709*^9, 3.8468514825551567`*^9}, {
+  3.8468515351278763`*^9, 3.846851648620263*^9}, {3.8468516900055885`*^9, 
+  3.8468517208252163`*^9}, {3.8468517530463943`*^9, 3.8468517911571393`*^9}, {
+  3.8468537774866986`*^9, 3.846853876148839*^9}, {3.8468539792807913`*^9, 
+  3.84685398006203*^9}, {3.8468540133370123`*^9, 3.846854017464095*^9}, {
+  3.8468580414745827`*^9, 3.8468580896598797`*^9}, {3.8468581266854672`*^9, 
+  3.8468581361154222`*^9}},ExpressionUUID->"089da713-b42e-4f75-8a21-\
+cb583e8bf695"],
+
+Cell[TextData[{
+ "i) For one, it can often determine the resulting behavior of a given \
+construct, since the ",
+ ButtonBox["Wolfram Language",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://www.wolfram.com"], None},
+  ButtonNote->"https://www.wolfram.com"],
+ " infinite evaluation system operates based on a precisely scheduled main \
+loop fashion, looking up for relevant definitions for each expression/symbol \
+it encounters in a predefined order: staring by UpValues of the expression\
+\[CloseCurlyQuote]s arguments, and only then going into DownValues of the \
+head part. The idea behind this being the intuitive notion that more specific \
+\[OpenCurlyDoubleQuote]objects\[CloseCurlyDoubleQuote], when taken as \
+arguments of some semantic operations, may desirably be assigned new \
+behaviors that overwrite previously defined more general functionality. But \
+this comes, of course, at the expense that when misused, could lead to \
+potentially bad unexpected results. "
+}], "Text",
+ CellChangeTimes->{{3.8468538798122635`*^9, 3.8468538991829967`*^9}, {
+  3.8468539370786514`*^9, 3.8468539623957863`*^9}, {3.846854096655103*^9, 
+  3.8468540969052296`*^9}, {3.846858205569462*^9, 3.846858207087823*^9}, {
+  3.8468655825181355`*^9, 
+  3.8468655825181355`*^9}},ExpressionUUID->"e7cc5504-dc48-4a9b-b9d4-\
+7dfb82da05c9"],
+
+Cell[TextData[{
+ "ii) Moreover, even in the best case scenario, where one could in principle \
+\[OpenCurlyDoubleQuote]equivalently\[CloseCurlyDoubleQuote] proceed setting \
+assignments either as ",
+ ButtonBox["DownValues",
+  BaseStyle->"Link",
+  ButtonData->"paclet:ref/DownValues"],
+ " or UpValues (for the corresponding expression parts), causing same \
+end-result behaviors, there\[CloseCurlyQuote]s still another playing factor \
+not to be neglected, particularly if performance is of priority. And yes, It \
+comes indeed from the very above-explained fact about the main loop \
+structure. As impressive as it may sound -it certainly does-, every time the \
+Wolfram Language gets an expression for evaluation, it checks for every \
+possible matching transformation defined for every symbol appearing at any of \
+the first two levels, head or arguments (actually it could also be the head\
+\[CloseCurlyQuote]s head or any argument\[CloseCurlyQuote]s head!), and tries \
+to apply the first match found. Hence, whenever seeking for runtime \
+optimization, it would almost always be a correct path to follow this rule of \
+thumb: assign values to less used symbols, since in average their \
+DownValues/UpValues lists would get checked the less. It would hardly ever be \
+a good idea to do \[OpenCurlyDoubleQuote]overloading\[CloseCurlyDoubleQuote] \
+by adding more specific cases to already very heavy built-in system symbols, \
+they do have enough of those! -I\[CloseCurlyQuote]m thinking on you Plus and \
+Times...     "
+}], "Text",
+ CellChangeTimes->{{3.846854083655242*^9, 3.846854219572136*^9}, {
+  3.8468542661202583`*^9, 3.846854345242709*^9}, {3.8468544006888857`*^9, 
+  3.846854466442027*^9}, {3.8468545084165993`*^9, 3.8468545530642776`*^9}, {
+  3.8468546224562483`*^9, 3.846854625095744*^9}, {3.8468546582096148`*^9, 
+  3.846854726558833*^9}, {3.8468549436883264`*^9, 3.846854959925231*^9}, {
+  3.8468549961848536`*^9, 3.8468551303888826`*^9}, {3.846855165461684*^9, 
+  3.846855822703595*^9}, {3.8468582989000006`*^9, 3.8468583006662264`*^9}, {
+  3.84685836445383*^9, 3.8468583646006308`*^9}, {3.8468656265032043`*^9, 
+  3.8468656265032043`*^9}},ExpressionUUID->"bc79c09d-b996-4408-bdde-\
+e37de363cf87"],
+
+Cell[TextData[{
+ "Ok, anyway, this seems reasonable, you may say, but then why, if this is so \
+well-known after all... why doesn\[CloseCurlyQuote]t the Wolfram Language \
+(having that knowledge) always defaults to assigning UpValues when ",
+ StyleBox["lhs",
+  FontSlant->"Italic"],
+ "\[CloseCurlyQuote]s head is a Protected system symbol, instead of showing \
+that obvious error message every time? Well, it\[CloseCurlyQuote]s definitely \
+not such a simple issue, and it does have all to do with avoiding common user \
+mistakes. "
+}], "Text",
+ CellChangeTimes->{{3.846855857300932*^9, 3.8468559922118206`*^9}, {
+  3.8468560323344574`*^9, 3.846856377667525*^9}, {3.846857132028364*^9, 
+  3.8468571325973215`*^9}, {3.846857166733243*^9, 3.846857168037567*^9}, {
+  3.84685759007751*^9, 3.846857591645542*^9}, {3.846858386622294*^9, 
+  3.8468583969126616`*^9}},ExpressionUUID->"77b17089-f702-475d-b8c7-\
+bbd8430d3d3d"],
+
+Cell["\<\
+But there is, you may say now -if you have gotten the chance to explore this \
+language thoroughly enough-, one peculiar symbol that behaves exactly as \
+above described: although being Protected, it doesn\[CloseCurlyQuote]t \
+complain about any Set/SetDelayed assignation statements, and just takes them \
+directly the same as their UpSet/UpSetDelayed homologous, pointing to \
+UpValues modifications. I\[CloseCurlyQuote]m talking here about none other \
+than the system-fundamental N symbol (there might well be more examples out \
+there). I\[CloseCurlyQuote]m certainly not a Wolfram Research developer, but \
+I can imagine they may have decided to implement this for N, based on the \
+type of role this particular function plays in the whole system and its main \
+uses on typical workflows, which hugely differs from general symbols. \
+\>", "Text",
+ CellChangeTimes->{{3.8468565354542313`*^9, 3.8468567753294735`*^9}, {
+   3.8468568058594556`*^9, 3.8468570678540316`*^9}, {3.8468571841901913`*^9, 
+   3.8468574497697363`*^9}, {3.8468574823133883`*^9, 3.846857502363976*^9}, 
+   3.846858484681243*^9},ExpressionUUID->"0663b205-de37-46b9-8819-\
+9f53eb5577c9"],
+
+Cell["\<\
+Perfect, thanks Wolfram people for protecting us from ourselves, great job \
+there! But what happens if despite all of that, you still want to do things \
+your way, and you\[CloseCurlyQuote]d like to see more (possibly user-defined) \
+functions behave just like that: you want some specified symbols to imitate \
+N. Well, no problem at all- Wolfram says-, you just need to tell me exactly \
+what to do. So let\[CloseCurlyQuote]s draw some virtual situation and get \
+into it! \
+\>", "Text",
+ CellChangeTimes->{{3.8468576196673903`*^9, 3.8468579501089735`*^9}, {
+  3.8468593049232936`*^9, 
+  3.846859340115299*^9}},ExpressionUUID->"8babe8c0-e855-4cc8-ae12-\
+3a91dad82220"],
+
+Cell[TextData[{
+ "Let\[CloseCurlyQuote]s say you are interested on some (hopefully \
+meaningful) symbol ",
+ StyleBox["prop",
+  FontSlant->"Italic"],
+ ", which you intend to treat in a function-like style for use as some sort \
+of property-value look-up resolver over a database type of structure, meaning \
+the application of ",
+ StyleBox["prop",
+  FontSlant->"Italic"],
+ " to an element must result in the corresponding value. If your data is \
+relatively small, you should be \[OpenCurlyDoubleQuote]save\
+\[CloseCurlyDoubleQuote], but as soon as it gets big, the aforementioned  \
+problems of long DownValues lists start. So you realize it would be much \
+better (in this case in term of efficiency) to set these property definitions \
+always as UpValues of the corresponding elements. Problem is you notice it \
+wouldn\[CloseCurlyQuote]t be that nice to go on writing all those ugly \
+UpSet/UpSetDelayed statements everywhere. So what if you could rather just \
+set one special definition for ",
+ StyleBox["prop",
+  FontSlant->"Italic"],
+ " that makes it behave like N: that tells the Wolfram Language to replace \
+any subsequent Set into UpSet (or the Delayed counterparts)? And this where \
+the magic of its symbolic nature comes into action!     "
+}], "Text",
+ CellChangeTimes->{{3.8468585721220903`*^9, 3.846858661137841*^9}, {
+  3.8468587027092905`*^9, 3.8468587324527054`*^9}, {3.8468588598523655`*^9, 
+  3.846858932526059*^9}, {3.8468589751329746`*^9, 3.846859022380515*^9}, {
+  3.846859065233204*^9, 3.8468592908349676`*^9}, {3.8468593916756086`*^9, 
+  3.8468595701912956`*^9}, {3.84685962245043*^9, 
+  3.846859992248424*^9}},ExpressionUUID->"1839b2ca-9d94-4040-abbe-\
+40c0c96dc8c8"],
+
+Cell["\<\
+This task, which anyone agrees would be an unthinkable idea in any \
+conventional language, becomes as simple as this incredibly short line of \
+Wolfram Language code: \
+\>", "Text",
+ CellChangeTimes->{{3.8468600247623034`*^9, 3.846860111848668*^9}, {
+  3.846860197846197*^9, 
+  3.8468602868399496`*^9}},ExpressionUUID->"0249cd59-4f09-4a5b-b72d-\
+37493ef70707"],
+
+Cell[BoxData[
+ RowBox[{"TagSetDelayed", "[", 
+  RowBox[{"prop", ",", 
+   RowBox[{"Set", "[", 
+    RowBox[{
+     RowBox[{"prop", "[", "elem_", "]"}], ",", "rhs_"}], "]"}], ",", 
+   RowBox[{"TagSet", "[", 
+    RowBox[{"elem", ",", 
+     RowBox[{"prop", "[", "elem", "]"}], ",", "rhs"}], "]"}]}], " ", 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.84685873628154*^9, 3.846858769167362*^9}, {
+  3.8468590513169594`*^9, 3.8468590588072004`*^9}, {3.846860123972912*^9, 
+  3.8468601459792857`*^9}, {3.846860305106837*^9, 3.846860420633518*^9}, {
+  3.8468604564431868`*^9, 3.846860481670518*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"b2b318ed-ce86-406e-a0af-98e8a428534f"],
+
+Cell["\<\
+mmm... still kind of long, right? Fair enough, let\[CloseCurlyQuote]s see \
+about this shortened version \
+\>", "Text",
+ CellChangeTimes->{{3.8468605501692686`*^9, 
+  3.8468605986905665`*^9}},ExpressionUUID->"2632b94a-ef5f-4312-a770-\
+3ec74347f7f3"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"prop", "[", "elem_", "]"}], "=", "rhs_"}], ")"}], "^:=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"prop", "[", "elem", "]"}], "^=", "rhs"}], ")"}]}]], "Input",
+ CellChangeTimes->{{3.846860630956665*^9, 3.8468606842258997`*^9}},
+ CellLabel->"In[6]:=",ExpressionUUID->"46b74237-9fc2-4aba-9480-70cd86dd7f1e"],
+
+Cell["\<\
+Whaaaaa?? That\[CloseCurlyQuote]s right! Hard to think of something simpler \
+in life...
+By the way, there might be strange colors styling this last statement on some \
+FrontEnd versions, just ignore them, Kernel understands. So let\
+\[CloseCurlyQuote]s try this see if it really works.\
+\>", "Text",
+ CellChangeTimes->{{3.846860691268556*^9, 3.8468609051369066`*^9}, {
+  3.8468609554685802`*^9, 3.846860973248448*^9}, {3.846861030101432*^9, 
+  3.846861030271021*^9}},ExpressionUUID->"e9cdcc8d-f427-426c-ab5f-\
+ba23a1cd0b6c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"prop", "[", "a", "]"}], "=", "Pi"}]], "Input",
+ CellChangeTimes->{{3.846860502353792*^9, 3.846860506784896*^9}, {
+  3.8468610343827395`*^9, 3.8468610358421016`*^9}},
+ CellLabel->"In[7]:=",ExpressionUUID->"0a9c81c4-dd77-430b-8387-2a678417e8bf"],
+
+Cell[BoxData["\[Pi]"], "Output",
+ CellChangeTimes->{3.8468605072333837`*^9, 3.846861036830028*^9},
+ CellLabel->"Out[7]=",ExpressionUUID->"d719d51a-e6a7-46a1-ac61-1ed821a3539e"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"??", "prop"}]], "Input",
+ CellChangeTimes->{{3.846860509843541*^9, 3.846860511635595*^9}},
+ CellLabel->"In[9]:=",ExpressionUUID->"983f41d6-0c5e-4bc3-8b87-9e1e9bca752a"],
+
+Cell[BoxData[
+ InterpretationBox[
+  StyleBox[
+   FrameBox[
+    DynamicModuleBox[{System`InformationDump`open$$ = True, 
+     System`InformationDump`mouseOver$$ = False}, 
+     PaneSelectorBox[{True->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
+             StripOnInput->False,
+             BaseStyle -> None],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox["\<\"Global`prop\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          PaneBox[
+           TagBox[GridBox[{
+              {
+               StyleBox[
+                TagBox[
+                 TooltipBox[
+                  
+                  StyleBox["\<\" UpValue Definitions\"\>", 
+                   "InformationRowLabel",
+                   StripOnInput->False],
+                  "\"UpValues\"",
+                  TooltipStyle->"TextStyling"],
+                 Annotation[#, "UpValues", "Tooltip"]& ], "DialogStyle",
+                StripOnInput->False]},
+              {
+               TemplateBox[{"\"\[ThinSpace]\"", 
+                 GridBox[{{
+                    RowBox[{
+                    RowBox[{"(", 
+                    RowBox[{
+                    RowBox[{"prop", "[", "elem_", "]"}], "=", "rhs_"}], ")"}],
+                     "^:=", 
+                    RowBox[{
+                    RowBox[{"prop", "[", "elem", "]"}], "^=", "rhs"}]}]}, {
+                   " "}}, GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                  DefaultBaseStyle -> "Column", 
+                  GridBoxItemSize -> {
+                   "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]},
+                "RowDefault"]}
+             },
+             DefaultBaseStyle->"Column",
+             GridBoxAlignment->{"Columns" -> {{Left}}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+            "Column"],
+           FrameMargins->{{6, 0}, {3, 6}}], "\<\"\"\>"},
+         {
+          PaneBox[GridBox[{
+             {
+              
+              DynamicModuleBox[{System`InformationDump`open$$ = {
+               False, False, False, False, False, False}}, 
+               StyleBox[GridBox[{
+                  {
+                   TagBox[
+                    TooltipBox[
+                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
+                    StripOnInput->False],
+                    "\"FullName\"",
+                    TooltipStyle->"TextStyling"],
+                    
+                    Annotation[#, "FullName", 
+                    "Tooltip"]& ], "\<\"Global`prop\"\>"}
+                 },
+                 AutoDelete->False,
+                 GridBoxAlignment->{"Columns" -> {Right, Left}},
+                 GridBoxDividers->None,
+                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
+                 GridBoxSpacings->{"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                    Offset[0.5599999999999999]}, 
+                    Offset[0.27999999999999997`]}, "Rows" -> {
+                    Offset[0.2], {
+                    Offset[0.8]}, 
+                    Offset[0.2]}}], "DialogStyle",
+                StripOnInput->False],
+               DynamicModuleValues:>{}]}
+            },
+            DefaultBaseStyle->"Column",
+            GridBoxAlignment->{"Columns" -> {{Left}}},
+            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
+            
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.5599999999999999]}, 
+                Offset[0.27999999999999997`]}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[3.6]}, 
+                Offset[0.2]}}],
+           FrameMargins->{{6, 6}, {6, 3}}], ""},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpener"],
+               ImageSizeCache->{13., {3., 10.}}], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpenerHot"],
+               ImageSizeCache->{13., {3., 10.}}]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, False],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"], False->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
+             StripOnInput->False],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox["\<\"Global`prop\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"]], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpenerHot"]]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, True],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"]}, Dynamic[System`InformationDump`open$$],
+      BaselinePosition->Baseline,
+      FrameMargins->0,
+      ImageSize->Automatic],
+     DynamicModuleValues:>{}],
+    BaseStyle->"InformationGridFrame",
+    StripOnInput->False], "InformationGridPlain",
+   StripOnInput->False],
+  InformationData[
+   Association[
+   "ObjectType" -> "Symbol", "Usage" -> "Global`prop", "Documentation" -> 
+    None, "OwnValues" -> None, "UpValues" -> 
+    Information`InformationValueForm[
+     UpValues, $CellContext`prop, {($CellContext`prop[
+          Pattern[$CellContext`elem, 
+           Blank[]]] = Pattern[$CellContext`rhs, 
+          Blank[]]) :> UpSet[
+         $CellContext`prop[$CellContext`elem], $CellContext`rhs]}], 
+    "DownValues" -> None, "SubValues" -> None, "DefaultValues" -> None, 
+    "NValues" -> None, "FormatValues" -> None, "Options" -> None, 
+    "Attributes" -> {}, "FullName" -> "Global`prop"], True]]], "Output",
+ CellChangeTimes->{3.8468605120843916`*^9, 3.8468610430648937`*^9},
+ CellLabel->"Out[9]=",ExpressionUUID->"5f6dd24d-195d-487a-9e44-59e469227aaf"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"prop", "[", "a", "]"}]], "Input",
+ CellChangeTimes->{{3.8468605168626175`*^9, 3.846860518438409*^9}},
+ CellLabel->"In[4]:=",ExpressionUUID->"f881c805-719a-44f7-99ee-60a8983f88d9"],
+
+Cell[BoxData["1"], "Output",
+ CellChangeTimes->{3.8468605189390016`*^9},
+ CellLabel->"Out[4]=",ExpressionUUID->"27071ccb-8a65-4401-b1e2-f4fdd90c500a"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"??", "a"}]], "Input",
+ CellChangeTimes->{{3.846860520376134*^9, 3.846860520730259*^9}},
+ CellLabel->"In[8]:=",ExpressionUUID->"86a2c927-e8fa-4059-88a4-660ccbd42e60"],
+
+Cell[BoxData[
+ InterpretationBox[
+  StyleBox[
+   FrameBox[
+    DynamicModuleBox[{System`InformationDump`open$$ = True, 
+     System`InformationDump`mouseOver$$ = False}, 
+     PaneSelectorBox[{True->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
+             StripOnInput->False,
+             BaseStyle -> None],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox["\<\"Global`a\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          PaneBox[
+           TagBox[GridBox[{
+              {
+               StyleBox[
+                TagBox[
+                 TooltipBox[
+                  
+                  StyleBox["\<\" UpValue Definitions\"\>", 
+                   "InformationRowLabel",
+                   StripOnInput->False],
+                  "\"UpValues\"",
+                  TooltipStyle->"TextStyling"],
+                 Annotation[#, "UpValues", "Tooltip"]& ], "DialogStyle",
+                StripOnInput->False]},
+              {
+               TemplateBox[{"\"\[ThinSpace]\"", 
+                 GridBox[{{
+                    RowBox[{
+                    RowBox[{"prop", "[", "a", "]"}], "^=", "\[Pi]"}]}, {" "}},
+                   GridBoxAlignment -> {"Columns" -> {{Left}}}, 
+                  DefaultBaseStyle -> "Column", 
+                  GridBoxItemSize -> {
+                   "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}]},
+                "RowDefault"]}
+             },
+             DefaultBaseStyle->"Column",
+             GridBoxAlignment->{"Columns" -> {{Left}}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+            "Column"],
+           FrameMargins->{{6, 0}, {3, 6}}], "\<\"\"\>"},
+         {
+          PaneBox[GridBox[{
+             {
+              
+              DynamicModuleBox[{System`InformationDump`open$$ = {
+               False, False, False, False, False, False}}, 
+               StyleBox[GridBox[{
+                  {
+                   TagBox[
+                    TooltipBox[
+                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
+                    StripOnInput->False],
+                    "\"FullName\"",
+                    TooltipStyle->"TextStyling"],
+                    
+                    Annotation[#, "FullName", 
+                    "Tooltip"]& ], "\<\"Global`a\"\>"}
+                 },
+                 AutoDelete->False,
+                 GridBoxAlignment->{"Columns" -> {Right, Left}},
+                 GridBoxDividers->None,
+                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
+                 GridBoxSpacings->{"Columns" -> {
+                    Offset[0.27999999999999997`], {
+                    Offset[0.5599999999999999]}, 
+                    Offset[0.27999999999999997`]}, "Rows" -> {
+                    Offset[0.2], {
+                    Offset[0.8]}, 
+                    Offset[0.2]}}], "DialogStyle",
+                StripOnInput->False],
+               DynamicModuleValues:>{}]}
+            },
+            DefaultBaseStyle->"Column",
+            GridBoxAlignment->{"Columns" -> {{Left}}},
+            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
+            GridBoxItemSize->{
+             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
+            GridBoxSpacings->{"Columns" -> {
+                Offset[0.27999999999999997`], {
+                 Offset[0.5599999999999999]}, 
+                Offset[0.27999999999999997`]}, "Rows" -> {
+                Offset[0.2], {
+                 Offset[3.6]}, 
+                Offset[0.2]}}],
+           FrameMargins->{{6, 6}, {6, 3}}], ""},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpener"],
+               ImageSizeCache->{13., {3., 10.}}], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "UpPointerOpenerHot"],
+               ImageSizeCache->{13., {3., 10.}}]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, False],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"], False->
+      TagBox[GridBox[{
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
+             StripOnInput->False],
+            FrameMargins->{{4, 0}, {-1, 1}}],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           PaneBox[
+            StyleBox["\<\"Global`a\"\>", "InformationUsageText",
+             StripOnInput->False,
+             LineSpacing->{1.5, 1.5, 3.}],
+            FrameMargins->{{10, 10}, {8, 10}}],
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False], 
+          ItemBox["\<\"\"\>",
+           BaseStyle->"InformationUsageSubtitleBackground",
+           StripOnInput->False]},
+         {
+          ItemBox[
+           TagBox[
+            ButtonBox[
+             PaneSelectorBox[{False->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpener"]], True->
+              
+              DynamicBox[FEPrivate`FrontEndResource[
+               "FEBitmaps", "DownPointerOpenerHot"]]}, Dynamic[
+              System`InformationDump`mouseOver$$]],
+             Alignment->Left,
+             Appearance->{"Default" -> None},
+             
+             ButtonFunction:>FEPrivate`Set[
+              System`InformationDump`open$$, True],
+             Evaluator->Automatic,
+             FrameMargins->{{9, 0}, {0, 0}},
+             ImageMargins->0,
+             ImageSize->Full,
+             Method->"Preemptive"],
+            
+            EventHandlerTag[{
+             "MouseEntered" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
+              "MouseExited" :> 
+              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
+              Method -> "Preemptive", PassEventsDown -> Automatic, 
+              PassEventsUp -> True}]],
+           BaseStyle->"InformationTitleBackground",
+           StripOnInput->False], "\[SpanFromLeft]"}
+        },
+        AutoDelete->False,
+        FrameStyle->Directive[
+          GrayLevel[0.8], 
+          Thickness[Tiny]],
+        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
+        GridBoxDividers->{
+         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
+        GridBoxItemSize->{
+         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+       "Grid"]}, Dynamic[System`InformationDump`open$$],
+      BaselinePosition->Baseline,
+      FrameMargins->0,
+      ImageSize->Automatic],
+     DynamicModuleValues:>{}],
+    BaseStyle->"InformationGridFrame",
+    StripOnInput->False], "InformationGridPlain",
+   StripOnInput->False],
+  InformationData[
+   Association[
+   "ObjectType" -> "Symbol", "Usage" -> "Global`a", "Documentation" -> None, 
+    "OwnValues" -> None, "UpValues" -> 
+    Information`InformationValueForm[
+     UpValues, $CellContext`a, {$CellContext`prop[$CellContext`a] -> Pi}], 
+    "DownValues" -> None, "SubValues" -> None, "DefaultValues" -> None, 
+    "NValues" -> None, "FormatValues" -> None, "Options" -> None, 
+    "Attributes" -> {}, "FullName" -> "Global`a"], True]]], "Output",
+ CellChangeTimes->{3.846860521147108*^9, 3.846861040718465*^9},
+ CellLabel->"Out[8]=",ExpressionUUID->"84de1ef5-6fa0-4713-a68f-102422a650e5"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1920, 997},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+Magnification:>1.25 Inherited,
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (July 9, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"7121618b-6ac4-42a1-a590-942b3b1ae84a"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 264, 5, 123, "Title",ExpressionUUID->"80cc4031-ae4b-4759-aaa6-ee7f768201a4"],
+Cell[847, 29, 1848, 27, 131, "Text",ExpressionUUID->"089da713-b42e-4f75-8a21-cb583e8bf695"],
+Cell[2698, 58, 1335, 24, 131, "Text",ExpressionUUID->"e7cc5504-dc48-4a9b-b9d4-7dfb82da05c9"],
+Cell[4036, 84, 2214, 34, 188, "Text",ExpressionUUID->"bc79c09d-b996-4408-bdde-e37de363cf87"],
+Cell[6253, 120, 916, 16, 73, "Text",ExpressionUUID->"77b17089-f702-475d-b8c7-bbd8430d3d3d"],
+Cell[7172, 138, 1171, 17, 131, "Text",ExpressionUUID->"0663b205-de37-46b9-8819-9f53eb5577c9"],
+Cell[8346, 157, 681, 12, 73, "Text",ExpressionUUID->"8babe8c0-e855-4cc8-ae12-3a91dad82220"],
+Cell[9030, 171, 1694, 31, 159, "Text",ExpressionUUID->"1839b2ca-9d94-4040-abbe-40c0c96dc8c8"],
+Cell[10727, 204, 371, 8, 44, "Text",ExpressionUUID->"0249cd59-4f09-4a5b-b72d-37493ef70707"],
+Cell[11101, 214, 662, 14, 36, "Input",ExpressionUUID->"b2b318ed-ce86-406e-a0af-98e8a428534f"],
+Cell[11766, 230, 259, 6, 44, "Text",ExpressionUUID->"2632b94a-ef5f-4312-a770-3ec74347f7f3"],
+Cell[12028, 238, 370, 9, 36, "Input",ExpressionUUID->"46b74237-9fc2-4aba-9480-70cd86dd7f1e"],
+Cell[12401, 249, 535, 10, 73, "Text",ExpressionUUID->"e9cdcc8d-f427-426c-ab5f-ba23a1cd0b6c"],
+Cell[CellGroupData[{
+Cell[12961, 263, 278, 5, 36, "Input",ExpressionUUID->"0a9c81c4-dd77-430b-8387-2a678417e8bf"],
+Cell[13242, 270, 176, 2, 41, "Output",ExpressionUUID->"d719d51a-e6a7-46a1-ac61-1ed821a3539e"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13455, 277, 192, 3, 36, "Input",ExpressionUUID->"983f41d6-0c5e-4bc3-8b87-9e1e9bca752a"],
+Cell[13650, 282, 9864, 249, 245, "Output",ExpressionUUID->"5f6dd24d-195d-487a-9e44-59e469227aaf"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[23551, 536, 203, 3, 36, "Input",ExpressionUUID->"f881c805-719a-44f7-99ee-60a8983f88d9"],
+Cell[23757, 541, 150, 2, 41, "Output",ExpressionUUID->"27071ccb-8a65-4401-b1e2-f4fdd90c500a"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[23944, 548, 189, 3, 36, "Input",ExpressionUUID->"86a2c927-e8fa-4059-88a4-660ccbd42e60"],
+Cell[24136, 553, 9462, 239, 245, "Output",ExpressionUUID->"84de1ef5-6fa0-4713-a68f-102422a650e5"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
