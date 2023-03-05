@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     41649,        991]
-NotebookOptionsPosition[     37968,        923]
-NotebookOutlinePosition[     38402,        940]
-CellTagsIndexPosition[     38359,        937]
+NotebookDataLength[     41997,        998]
+NotebookOptionsPosition[     38201,        928]
+NotebookOutlinePosition[     38748,        947]
+CellTagsIndexPosition[     38705,        944]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -116,7 +116,7 @@ DownValues/UpValues lists would get checked the less. It would hardly ever be \
 a good idea to do \[OpenCurlyDoubleQuote]overloading\[CloseCurlyDoubleQuote] \
 by adding more specific cases to already very \[OpenCurlyDoubleQuote]heavy\
 \[CloseCurlyDoubleQuote] built-in system symbols, they do have enough of \
-those! -I\[CloseCurlyQuote]m thinking on you Plus and Times...     "
+those! -I\[CloseCurlyQuote]m thinking of you Plus and Times...     "
 }], "Text",
  CellChangeTimes->{{3.846854083655242*^9, 3.846854219572136*^9}, {
   3.8468542661202583`*^9, 3.846854345242709*^9}, {3.8468544006888857`*^9, 
@@ -126,8 +126,9 @@ those! -I\[CloseCurlyQuote]m thinking on you Plus and Times...     "
   3.8468549961848536`*^9, 3.8468551303888826`*^9}, {3.846855165461684*^9, 
   3.846855822703595*^9}, {3.8468582989000006`*^9, 3.8468583006662264`*^9}, {
   3.84685836445383*^9, 3.8468583646006308`*^9}, {3.8468656265032043`*^9, 
-  3.8468656265032043`*^9}, {3.8869438689443827`*^9, 
-  3.8869439149566526`*^9}},ExpressionUUID->"bc79c09d-b996-4408-bdde-\
+  3.8468656265032043`*^9}, {3.8869438689443827`*^9, 3.8869439149566526`*^9}, {
+  3.8869964688727975`*^9, 
+  3.886996468987504*^9}},ExpressionUUID->"bc79c09d-b996-4408-bdde-\
 e37de363cf87"]
 }, Open  ]],
 
@@ -141,7 +142,7 @@ eb067e31f721"],
 Cell[TextData[{
  "Ok, anyway, this seems reasonable, you may say, but then why, if this is so \
 well-known after all... why doesn\[CloseCurlyQuote]t the Wolfram Language \
-(having that knowledge) always defaults to assigning UpValues when ",
+(having all that knowledge) always defaults to assigning UpValues when ",
  StyleBox["lhs",
   FontSlant->"Italic"],
  "\[CloseCurlyQuote]s head is a Protected system symbol, instead of showing \
@@ -153,8 +154,9 @@ common user mistakes. "
   3.8468560323344574`*^9, 3.846856377667525*^9}, {3.846857132028364*^9, 
   3.8468571325973215`*^9}, {3.846857166733243*^9, 3.846857168037567*^9}, {
   3.84685759007751*^9, 3.846857591645542*^9}, {3.846858386622294*^9, 
-  3.8468583969126616`*^9}, {3.8869457309622498`*^9, 
-  3.886945732285228*^9}},ExpressionUUID->"77b17089-f702-475d-b8c7-\
+  3.8468583969126616`*^9}, {3.8869457309622498`*^9, 3.886945732285228*^9}, {
+  3.8869964922705593`*^9, 
+  3.886996495212767*^9}},ExpressionUUID->"77b17089-f702-475d-b8c7-\
 bbd8430d3d3d"],
 
 Cell["\<\
@@ -242,13 +244,14 @@ Cell["Implementation", "Chapter",
 6b2615e1b779"],
 
 Cell["\<\
-This task, which anyone would agrees would be an unthinkable idea in any \
+This task, which anyone would agree would be an unthinkable idea in any \
 conventional language, becomes as simple as this incredibly short line of \
 Wolfram Language code: \
 \>", "Text",
  CellChangeTimes->{{3.8468600247623034`*^9, 3.846860111848668*^9}, {
-  3.846860197846197*^9, 3.8468602868399496`*^9}, {3.8869442350907736`*^9, 
-  3.886944260666392*^9}},ExpressionUUID->"0249cd59-4f09-4a5b-b72d-\
+   3.846860197846197*^9, 3.8468602868399496`*^9}, {3.8869442350907736`*^9, 
+   3.886944260666392*^9}, 
+   3.886996709742646*^9},ExpressionUUID->"0249cd59-4f09-4a5b-b72d-\
 37493ef70707"],
 
 Cell[BoxData[
@@ -365,11 +368,12 @@ Cell[TextData[{
  " regarding our new ",
  StyleBox["symbol",
   FontSlant->"Italic"],
- ", apart from our general \[OpenCurlyDoubleQuote]Set \[Rule] TagSet\
+ ", but only our general \[OpenCurlyDoubleQuote]Set \[Rule] TagSet\
 \[CloseCurlyDoubleQuote] rule, and this is precisely what we wanted!"
 }], "Text",
- CellChangeTimes->{{3.886944731829286*^9, 
-  3.8869450536924696`*^9}},ExpressionUUID->"c526b438-70ed-4122-9c0c-\
+ CellChangeTimes->{{3.886944731829286*^9, 3.8869450536924696`*^9}, {
+  3.8869968135156326`*^9, 
+  3.886996829056972*^9}},ExpressionUUID->"c526b438-70ed-4122-9c0c-\
 657fa45e1542"],
 
 Cell[CellGroupData[{
@@ -636,11 +640,12 @@ Cell[TextData[{
  "Meanwhile, the specific definition for our ",
  StyleBox["symbol",
   FontSlant->"Italic"],
- " is, of course, defined as an UpValue thereof, nice."
+ " is, of course, defined as an UpValue thereof, nice!"
 }], "Text",
  CellChangeTimes->{{3.88694506806404*^9, 3.8869451413014603`*^9}, {
   3.8869456086531706`*^9, 3.886945627642563*^9}, {3.8869456921820993`*^9, 
-  3.8869456929212027`*^9}},ExpressionUUID->"cf3976f4-32b1-4a03-8dac-\
+  3.8869456929212027`*^9}, {3.886996870872056*^9, 
+  3.8869968712890787`*^9}},ExpressionUUID->"cf3976f4-32b1-4a03-8dac-\
 9c3ec2f95270"],
 
 Cell[CellGroupData[{
@@ -923,6 +928,8 @@ e8e4c1edbcc2"]
 },
 WindowSize->{1440., 747.75},
 WindowMargins->{{-6, Automatic}, {Automatic, -6}},
+SpellingDictionaries->{"CorrectWords"->{
+ "Diffractem", "Keyence", "mmm", "Whaaaaa", "lhs\[CloseCurlyQuote]s"}},
 Magnification:>1.25 Inherited,
 FrontEndVersion->"13.1 for Microsoft Windows (64-bit) (June 16, 2022)",
 StyleDefinitions->"Default.nb",
@@ -945,52 +952,52 @@ Cell[CellGroupData[{
 Cell[979, 32, 167, 3, 85, "Chapter",ExpressionUUID->"ec2c0aaa-b1c4-47f8-be88-526dedca1b71"],
 Cell[1149, 37, 1957, 29, 187, "Text",ExpressionUUID->"089da713-b42e-4f75-8a21-cb583e8bf695"],
 Cell[3109, 68, 1440, 25, 158, "Text",ExpressionUUID->"e7cc5504-dc48-4a9b-b9d4-7dfb82da05c9"],
-Cell[4552, 95, 2316, 35, 245, "Text",ExpressionUUID->"bc79c09d-b996-4408-bdde-e37de363cf87"]
+Cell[4552, 95, 2367, 36, 245, "Text",ExpressionUUID->"bc79c09d-b996-4408-bdde-e37de363cf87"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[6905, 135, 157, 3, 85, "Chapter",ExpressionUUID->"015bceea-2874-4532-a277-eb067e31f721"],
-Cell[7065, 140, 974, 17, 101, "Text",ExpressionUUID->"77b17089-f702-475d-b8c7-bbd8430d3d3d"],
-Cell[8042, 159, 1210, 18, 158, "Text",ExpressionUUID->"0663b205-de37-46b9-8819-9f53eb5577c9"]
+Cell[6956, 136, 157, 3, 85, "Chapter",ExpressionUUID->"015bceea-2874-4532-a277-eb067e31f721"],
+Cell[7116, 141, 1029, 18, 101, "Text",ExpressionUUID->"77b17089-f702-475d-b8c7-bbd8430d3d3d"],
+Cell[8148, 161, 1210, 18, 158, "Text",ExpressionUUID->"0663b205-de37-46b9-8819-9f53eb5577c9"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[9289, 182, 153, 3, 85, "Chapter",ExpressionUUID->"70459518-4519-4a88-813b-c9c6a634f2b3"],
-Cell[9445, 187, 734, 12, 101, "Text",ExpressionUUID->"8babe8c0-e855-4cc8-ae12-3a91dad82220"],
-Cell[10182, 201, 1814, 32, 216, "Text",ExpressionUUID->"1839b2ca-9d94-4040-abbe-40c0c96dc8c8"]
+Cell[9395, 184, 153, 3, 85, "Chapter",ExpressionUUID->"70459518-4519-4a88-813b-c9c6a634f2b3"],
+Cell[9551, 189, 734, 12, 101, "Text",ExpressionUUID->"8babe8c0-e855-4cc8-ae12-3a91dad82220"],
+Cell[10288, 203, 1814, 32, 216, "Text",ExpressionUUID->"1839b2ca-9d94-4040-abbe-40c0c96dc8c8"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[12033, 238, 161, 3, 85, "Chapter",ExpressionUUID->"d940e869-6824-4ad2-9e2e-6b2615e1b779"],
-Cell[12197, 243, 425, 8, 72, "Text",ExpressionUUID->"0249cd59-4f09-4a5b-b72d-37493ef70707"],
-Cell[12625, 253, 662, 14, 35, "Input",ExpressionUUID->"b2b318ed-ce86-406e-a0af-98e8a428534f"],
-Cell[13290, 269, 259, 6, 43, "Text",ExpressionUUID->"2632b94a-ef5f-4312-a770-3ec74347f7f3"],
-Cell[13552, 277, 370, 9, 35, "Input",ExpressionUUID->"46b74237-9fc2-4aba-9480-70cd86dd7f1e"],
-Cell[13925, 288, 525, 10, 72, "Text",ExpressionUUID->"e9cdcc8d-f427-426c-ab5f-ba23a1cd0b6c"]
+Cell[12139, 240, 161, 3, 85, "Chapter",ExpressionUUID->"d940e869-6824-4ad2-9e2e-6b2615e1b779"],
+Cell[12303, 245, 452, 9, 72, "Text",ExpressionUUID->"0249cd59-4f09-4a5b-b72d-37493ef70707"],
+Cell[12758, 256, 662, 14, 35, "Input",ExpressionUUID->"b2b318ed-ce86-406e-a0af-98e8a428534f"],
+Cell[13423, 272, 259, 6, 43, "Text",ExpressionUUID->"2632b94a-ef5f-4312-a770-3ec74347f7f3"],
+Cell[13685, 280, 370, 9, 35, "Input",ExpressionUUID->"46b74237-9fc2-4aba-9480-70cd86dd7f1e"],
+Cell[14058, 291, 525, 10, 72, "Text",ExpressionUUID->"e9cdcc8d-f427-426c-ab5f-ba23a1cd0b6c"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[14487, 303, 206, 4, 85, "Chapter",ExpressionUUID->"8eb39dcb-404d-4c39-a01c-318f4eb1f88b"],
-Cell[14696, 309, 472, 16, 43, "Text",ExpressionUUID->"68748cc4-d95a-4c88-b9fd-ba96f45ae8da"],
+Cell[14620, 306, 206, 4, 85, "Chapter",ExpressionUUID->"8eb39dcb-404d-4c39-a01c-318f4eb1f88b"],
+Cell[14829, 312, 472, 16, 43, "Text",ExpressionUUID->"68748cc4-d95a-4c88-b9fd-ba96f45ae8da"],
 Cell[CellGroupData[{
-Cell[15193, 329, 339, 6, 35, "Input",ExpressionUUID->"0a9c81c4-dd77-430b-8387-2a678417e8bf"],
-Cell[15535, 337, 227, 3, 40, "Output",ExpressionUUID->"c44162c7-9a27-40e3-a49f-27c632d78053"]
+Cell[15326, 332, 339, 6, 35, "Input",ExpressionUUID->"0a9c81c4-dd77-430b-8387-2a678417e8bf"],
+Cell[15668, 340, 227, 3, 40, "Output",ExpressionUUID->"c44162c7-9a27-40e3-a49f-27c632d78053"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[15799, 345, 259, 4, 35, "Input",ExpressionUUID->"f881c805-719a-44f7-99ee-60a8983f88d9"],
-Cell[16061, 351, 231, 4, 40, "Output",ExpressionUUID->"5fb14eaa-7773-4ee8-9911-0df4992eb3bc"]
+Cell[15932, 348, 259, 4, 35, "Input",ExpressionUUID->"f881c805-719a-44f7-99ee-60a8983f88d9"],
+Cell[16194, 354, 231, 4, 40, "Output",ExpressionUUID->"5fb14eaa-7773-4ee8-9911-0df4992eb3bc"]
 }, Open  ]],
-Cell[16307, 358, 556, 14, 101, "Text",ExpressionUUID->"c526b438-70ed-4122-9c0c-657fa45e1542"],
+Cell[16440, 361, 605, 15, 101, "Text",ExpressionUUID->"c526b438-70ed-4122-9c0c-657fa45e1542"],
 Cell[CellGroupData[{
-Cell[16888, 376, 197, 4, 35, "Input",ExpressionUUID->"983f41d6-0c5e-4bc3-8b87-9e1e9bca752a"],
-Cell[17088, 382, 9872, 249, 233, "Output",ExpressionUUID->"b14a0b7c-d32e-4b03-b69f-6d4252b9db26"]
+Cell[17070, 380, 197, 4, 35, "Input",ExpressionUUID->"983f41d6-0c5e-4bc3-8b87-9e1e9bca752a"],
+Cell[17270, 386, 9872, 249, 233, "Output",ExpressionUUID->"b14a0b7c-d32e-4b03-b69f-6d4252b9db26"]
 }, Open  ]],
-Cell[26975, 634, 403, 9, 43, "Text",ExpressionUUID->"cf3976f4-32b1-4a03-8dac-9c3ec2f95270"],
+Cell[27157, 638, 454, 10, 43, "Text",ExpressionUUID->"cf3976f4-32b1-4a03-8dac-9c3ec2f95270"],
 Cell[CellGroupData[{
-Cell[27403, 647, 194, 4, 35, "Input",ExpressionUUID->"86a2c927-e8fa-4059-88a4-660ccbd42e60"],
-Cell[27600, 653, 9494, 241, 233, "Output",ExpressionUUID->"4e0d7ec4-4d7b-4a6d-acb4-8597eb7376fa"]
+Cell[27636, 652, 194, 4, 35, "Input",ExpressionUUID->"86a2c927-e8fa-4059-88a4-660ccbd42e60"],
+Cell[27833, 658, 9494, 241, 233, "Output",ExpressionUUID->"4e0d7ec4-4d7b-4a6d-acb4-8597eb7376fa"]
 }, Open  ]],
-Cell[37109, 897, 185, 3, 43, "Text",ExpressionUUID->"bc8a7781-29cc-4bae-9f1f-514af83f68c4"]
+Cell[37342, 902, 185, 3, 43, "Text",ExpressionUUID->"bc8a7781-29cc-4bae-9f1f-514af83f68c4"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[37331, 905, 196, 4, 85, "Chapter",ExpressionUUID->"838f5ed0-a7c3-4384-815e-e5013d131d4a"],
-Cell[37530, 911, 410, 8, 72, "Text",ExpressionUUID->"6c4d4974-d291-497e-9dfe-e8e4c1edbcc2"]
+Cell[37564, 910, 196, 4, 85, "Chapter",ExpressionUUID->"838f5ed0-a7c3-4384-815e-e5013d131d4a"],
+Cell[37763, 916, 410, 8, 72, "Text",ExpressionUUID->"6c4d4974-d291-497e-9dfe-e8e4c1edbcc2"]
 }, Open  ]]
 }, Open  ]]
 }
